@@ -13,21 +13,27 @@ impl Renderer {
     fn render(&mut self, args: &RenderArgs, lines: &Vec<(f64,f64,f64,f64)>) {
         use graphics::*;
 
+        //Cores?
+
         const BLACK: [f32; 4] = [0.0, 0.0, 0.0, 0.0];
         const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+
+        //Cria sistema de coordenada x e y , e a variavels rotação
 
         let rotation = self.rotation;
         let (x, y) = (args.window_size[0] / 2.0, args.window_size[1] / 2.0);
 
+        //Desenha a linha
+
         let mut lines_to_draw = Vec::new();
 
         for (x1,y1,x2,y2) in lines {
-            let from = [x1 * args.window_size[0] / 2.0, y1 * (- args.window_size[0] / 2.0)];
-            let to = [x2 * args.window_size[0] / 2.0, y2 * (- args.window_size[0] / 2.0)];
+            let from = [x1 * args.window_size[0] / 2.0, y1 * (- args.window_size[1] / 2.0)];
+            let to = [x2 * args.window_size[0] / 2.0, y2 * ( args.window_size[1] / 2.0)];
             lines_to_draw.push((from, to, WHITE));
-        }
+        }     
 
-
+        
         self.gl.draw(args.viewport(), |c, gl| {
             // Clear the screen.
             clear(BLACK, gl);
@@ -46,7 +52,7 @@ impl Renderer {
 
     fn update(&mut self, args: &UpdateArgs) {
         // Rotate 2 radians per second.
-        self.rotation += 2.0 * args.dt;
+        self.rotation +=  2.0 * args.dt;
     }
 }
 
@@ -68,6 +74,8 @@ pub fn setup_renderer() -> (Window, Renderer) {
 
     (window, app)
 }
+
+//Loop de animação
 
 pub fn render_in_a_loop(renderer: &mut Renderer, window: &mut Window) {
     let mut events = Events::new(EventSettings::new());
